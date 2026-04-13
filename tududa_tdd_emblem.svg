@@ -1,0 +1,21 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" fill="#000000" />
+  
+  <!-- Emblem Geometric Crest (Rounded Box + Double Lines) -->
+  <!-- Outer thick line -->
+  <rect x="180" y="160" width="664" height="600" rx="120" fill="none" stroke="#FFFFFF" stroke-width="24" />
+  <!-- Inner thin dashed line -->
+  <rect x="220" y="200" width="584" height="520" rx="80" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-dasharray="24 16" />
+  
+  <!-- "TDD" bold monogram text -->
+  <text x="512" y="550" fill="#FFFFFF" font-family="-apple-system, system-ui, Helvetica, Arial, sans-serif" font-weight="900" font-size="260" text-anchor="middle" letter-spacing="2">TDD</text>
+  
+  <!-- Checkmark Cutout Effect (black wide stroke cuts through TDD text and frame) -->
+  <path d="M 240 500 L 460 700 L 840 280" fill="none" stroke="#000000" stroke-width="96" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Stylish crisp white checking path -->
+  <path d="M 240 500 L 460 700 L 840 280" fill="none" stroke="#FFFFFF" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- "tududa" elegant modern wordmark -->
+  <text x="512" y="900" fill="#FFFFFF" font-family="-apple-system, system-ui, Helvetica, Arial, sans-serif" font-weight="700" font-size="120" text-anchor="middle" letter-spacing="16">tududa</text>
+</svg>

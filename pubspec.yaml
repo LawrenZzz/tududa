@@ -1,0 +1,59 @@
+name: tududa
+description: "Tududa - A calm, open system for organizing life and work."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  
+  # State Management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  
+  # Networking
+  dio: ^5.7.0
+  dio_cookie_manager: ^3.1.1
+  cookie_jar: ^4.0.8
+  
+  # Storage
+  shared_preferences: ^2.3.4
+  flutter_secure_storage: ^9.2.4
+  path_provider: ^2.1.5
+  
+  # Routing
+  go_router: ^14.8.1
+  
+  # UI
+  google_fonts: ^6.2.1
+  flutter_markdown: ^0.7.6
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  flutter_slidable: ^3.1.1
+  
+  # Utils
+  intl: ^0.19.0
+  json_annotation: ^4.9.0
+  equatable: ^2.0.7
+  uuid: ^4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  json_serializable: ^6.9.4
+  build_runner: ^2.4.14
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"

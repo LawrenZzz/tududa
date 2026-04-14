@@ -2,6 +2,10 @@
 
 # 📱 Tududa
 
+<img src="assets/icon.png" width="128" alt="Tududa Icon">
+<br>
+<small><em>应用图标由 AI 生成</em></small>
+
 **基于 [Tududi](https://github.com/chrisvel/tududi) 的 Flutter 移动客户端**
 
 *一个平静、开放的生活与工作组织系统。*

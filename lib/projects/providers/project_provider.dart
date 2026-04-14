@@ -68,17 +68,21 @@ class ProjectNotifier extends StateNotifier<ProjectListState> {
 
   Future<bool> updateProject(Project project) async {
     try {
-      if (project.id == null) return false;
+      // Server PATCH route uses uid
+      final projectId = project.uid ?? project.id?.toString();
+      if (projectId == null) return false;
       final response = await ApiService.instance.updateProject(
-        project.id!,
+        projectId,
         project.toJson(),
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 302) {
         await loadProjects();
         return true;
       }
+      debugPrint('Update project failed: status=${response.statusCode}');
       return false;
     } catch (e) {
+      debugPrint('Update project error: $e');
       return false;
     }
   }

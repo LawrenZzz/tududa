@@ -78,7 +78,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'new',
                 parentNavigatorKey: rootNavigatorKey,
-                builder: (context, state) => const TaskFormScreen(),
+                builder: (context, state) {
+                  final projectId = state.uri.queryParameters['projectId'];
+                  return TaskFormScreen(defaultProjectId: projectId != null ? int.tryParse(projectId) : null);
+                },
               ),
               GoRoute(
                 path: ':id',

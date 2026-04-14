@@ -23,14 +23,17 @@ class _ProjectDetailScreenState extends ConsumerState<ProjectDetailScreen> {
   List<Task> _tasks = [];
   bool _loadingTasks = true;
   bool _isKanbanView = true;
+  int? _numericProjectId; // Cache the numeric project id for filtering
 
   @override
   void initState() {
     super.initState();
-    _loadProjectTasks();
+    // Don't load tasks here - wait for project detail to provide numeric ID
   }
 
   Future<void> _loadProjectTasks() async {
+    if (_numericProjectId == null) return; // Can't filter without numeric id
+    setState(() => _loadingTasks = true);
     try {
       final response = await ApiService.instance.getTasks(
         queryParams: {'project_id': widget.projectId},
@@ -39,13 +42,24 @@ class _ProjectDetailScreenState extends ConsumerState<ProjectDetailScreen> {
         final List<dynamic> data = response.data is List
             ? response.data
             : (response.data['tasks'] ?? []);
+        final allTasks = data.map((e) => Task.fromJson(e as Map<String, dynamic>)).toList();
+        // Client-side filter: only keep tasks that belong to this project
+        final filteredTasks = allTasks.where((t) => t.projectId == _numericProjectId).toList();
         setState(() {
-          _tasks = data.map((e) => Task.fromJson(e as Map<String, dynamic>)).toList();
+          _tasks = filteredTasks;
           _loadingTasks = false;
         });
       }
     } catch (e) {
       if (mounted) setState(() => _loadingTasks = false);
+    }
+  }
+
+  /// Called once we have the project detail to set the numeric id and load tasks
+  void _onProjectLoaded(int projectId) {
+    if (_numericProjectId != projectId) {
+      _numericProjectId = projectId;
+      _loadProjectTasks();
     }
   }
 
@@ -70,6 +84,11 @@ class _ProjectDetailScreenState extends ConsumerState<ProjectDetailScreen> {
             appBar: AppBar(),
             body: Center(child: Text(strings.noProjectsYet)),
           );
+        }
+
+        // Set numeric project id and trigger task loading on first load
+        if (project.id != null && _numericProjectId != project.id) {
+          Future.microtask(() => _onProjectLoaded(project.id!));
         }
 
         final statusColor = AppTheme.getProjectStatusColor(
@@ -167,7 +186,7 @@ class _ProjectDetailScreenState extends ConsumerState<ProjectDetailScreen> {
                     Text(strings.projectTasks, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
                     const Spacer(),
                     TextButton.icon(
-                      onPressed: () => context.push('/tasks/new'),
+                      onPressed: () => context.push('/tasks/new?projectId=${project.id}'),
                       icon: const Icon(Icons.add_rounded, size: 18),
                       label: Text(strings.addTask),
                     ),

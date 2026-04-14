@@ -133,7 +133,7 @@ class ApiService {
   }
 
   Future<Response> updateTask(dynamic id, Map<String, dynamic> data) async {
-    return _dio.put('/task/$id', data: data);
+    return _dio.patch('/task/$id', data: data);
   }
 
   Future<Response> deleteTask(dynamic id) async {
@@ -153,7 +153,7 @@ class ApiService {
   }
 
   Future<Response> reorderSubtasks(dynamic parentId, List<Map<String, dynamic>> order) async {
-    return _dio.put('/task/$parentId/subtasks/reorder', data: {'order': order});
+    return _dio.patch('/task/$parentId/subtasks/reorder', data: {'order': order});
   }
 
   // ---------- Projects API ----------
@@ -171,7 +171,7 @@ class ApiService {
   }
 
   Future<Response> updateProject(dynamic id, Map<String, dynamic> data) async {
-    return _dio.put('/project/$id', data: data);
+    return _dio.patch('/project/$id', data: data);
   }
 
   Future<Response> deleteProject(dynamic id) async {
@@ -193,7 +193,7 @@ class ApiService {
   }
 
   Future<Response> updateNote(dynamic id, Map<String, dynamic> data) async {
-    return _dio.put('/note/$id', data: data);
+    return _dio.patch('/note/$id', data: data);
   }
 
   Future<Response> deleteNote(dynamic id) async {
@@ -211,7 +211,7 @@ class ApiService {
   }
 
   Future<Response> updateArea(dynamic id, Map<String, dynamic> data) async {
-    return _dio.put('/area/$id', data: data);
+    return _dio.patch('/area/$id', data: data);
   }
 
   Future<Response> deleteArea(dynamic id) async {
@@ -239,7 +239,7 @@ class ApiService {
   }
 
   Future<Response> updateInboxItem(dynamic id, Map<String, dynamic> data) async {
-    return _dio.put('/inbox/$id', data: data);
+    return _dio.patch('/inbox/$id', data: data);
   }
 
   Future<Response> deleteInboxItem(dynamic id) async {
@@ -249,14 +249,14 @@ class ApiService {
   // ---------- Settings API ----------
 
   Future<Response> updateUserSettings(Map<String, dynamic> data) async {
-    return _dio.put('/profile', data: data);
+    return _dio.patch('/profile', data: data);
   }
 
   Future<Response> updateSidebarSettings(Map<String, dynamic> data) async {
-    return _dio.put('/profile/sidebar-settings', data: data);
+    return _dio.patch('/profile/sidebar-settings', data: data);
   }
 
   Future<Response> updateTodaySettings(Map<String, dynamic> data) async {
-    return _dio.put('/profile/today-settings', data: data);
+    return _dio.patch('/profile/today-settings', data: data);
   }
 }

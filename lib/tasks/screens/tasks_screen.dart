@@ -6,6 +6,7 @@ import '../providers/task_provider.dart';
 import '../models/task_model.dart';
 import '../../core/theme/app_theme.dart';
 import '../../common/widgets/glass_container.dart';
+import '../../projects/widgets/kanban_board.dart';
 import '../../l10n/strings.dart';
 
 /// Main tasks screen with filter tabs (Today/Upcoming/Someday/Completed).
@@ -17,6 +18,8 @@ class TasksScreen extends ConsumerStatefulWidget {
 }
 
 class _TasksScreenState extends ConsumerState<TasksScreen> {
+  bool _isKanbanView = false;
+
   @override
   void initState() {
     super.initState();
@@ -33,9 +36,15 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
       appBar: AppBar(
         title: Text(strings.tasks),
         actions: [
+          // Kanban/List toggle
+          IconButton(
+            icon: Icon(_isKanbanView ? Icons.view_list_rounded : Icons.view_kanban_rounded),
+            tooltip: _isKanbanView ? strings.list : strings.board,
+            onPressed: () => setState(() => _isKanbanView = !_isKanbanView),
+          ),
           PopupMenuButton<TaskSort>(
             icon: const Icon(Icons.sort_rounded),
-            tooltip: 'Sort', // Keeping simple internal translations
+            tooltip: 'Sort',
             onSelected: (sort) {
               ref.read(taskListProvider.notifier).setSort(sort);
             },
@@ -76,7 +85,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             ),
           ),
 
-          // Task list
+          // Task content (list or kanban)
           Expanded(
             child: taskState.isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -88,32 +97,47 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                       )
                     : taskState.tasks.isEmpty
                         ? _EmptyView(filter: taskState.filter)
-                        : RefreshIndicator(
-                            onRefresh: () =>
-                                ref.read(taskListProvider.notifier).loadTasks(),
-                            child: ListView.builder(
-                              padding: const EdgeInsets.only(bottom: 88),
-                              itemCount: taskState.tasks.length,
-                              itemBuilder: (context, index) {
-                                final task = taskState.tasks[index];
-                                return _TaskListItem(
-                                  task: task,
-                                  onTap: () {
-                                    final id = task.uid ?? task.id?.toString();
-                                    if (id != null) {
-                                      context.push('/tasks/$id');
-                                    }
+                        : _isKanbanView
+                            ? // Kanban board view
+                              KanbanBoard(
+                                tasks: taskState.tasks,
+                                onTaskTap: (task) {
+                                  final id = task.uid ?? task.id?.toString();
+                                  if (id != null) context.push('/tasks/$id');
+                                },
+                                onTaskStatusChanged: (task, newStatus) async {
+                                  final taskId = task.uid ?? task.id?.toString();
+                                  if (taskId == null) return;
+                                  await ref.read(taskListProvider.notifier).updateTaskStatus(taskId, newStatus);
+                                },
+                              )
+                            : // List view
+                              RefreshIndicator(
+                                onRefresh: () =>
+                                    ref.read(taskListProvider.notifier).loadTasks(),
+                                child: ListView.builder(
+                                  padding: const EdgeInsets.only(bottom: 88),
+                                  itemCount: taskState.tasks.length,
+                                  itemBuilder: (context, index) {
+                                    final task = taskState.tasks[index];
+                                    return _TaskListItem(
+                                      task: task,
+                                      onTap: () {
+                                        final id = task.uid ?? task.id?.toString();
+                                        if (id != null) {
+                                          context.push('/tasks/$id');
+                                        }
+                                      },
+                                      onToggle: () {
+                                        ref
+                                            .read(taskListProvider.notifier)
+                                            .toggleTaskComplete(
+                                                taskState.tasks[index]);
+                                      },
+                                    );
                                   },
-                                  onToggle: () {
-                                    ref
-                                        .read(taskListProvider.notifier)
-                                        .toggleTaskComplete(
-                                            taskState.tasks[index]);
-                                  },
-                                );
-                              },
-                            ),
-                          ),
+                                ),
+                              ),
           ),
         ],
       ),

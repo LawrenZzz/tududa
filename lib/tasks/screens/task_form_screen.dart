@@ -10,7 +10,8 @@ import '../../l10n/strings.dart';
 /// Task create/edit form screen.
 class TaskFormScreen extends ConsumerStatefulWidget {
   final dynamic taskId;
-  const TaskFormScreen({super.key, this.taskId});
+  final int? defaultProjectId;
+  const TaskFormScreen({super.key, this.taskId, this.defaultProjectId});
 
   @override
   ConsumerState<TaskFormScreen> createState() => _TaskFormScreenState();
@@ -39,11 +40,17 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     if (widget.taskId != null) {
       _isEdit = true;
       _loadTask();
+    } else if (widget.defaultProjectId != null) {
+      _projectId = widget.defaultProjectId;
     }
     // Ensure projects are loaded for the picker
     Future.microtask(
         () => ref.read(projectListProvider.notifier).loadProjects());
   }
+
+  // Store the actual numeric id and uid from the loaded task
+  int? _loadedTaskId;
+  String? _loadedTaskUid;
 
   Future<void> _loadTask() async {
     setState(() => _isLoading = true);
@@ -52,6 +59,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       _nameController.text = task.name;
       _noteController.text = task.note ?? '';
       setState(() {
+        _loadedTaskId = task.id;
+        _loadedTaskUid = task.uid;
         _priority = task.priority;
         _status = task.status;
         _dueDate = task.dueDate;
@@ -74,8 +83,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     setState(() => _isLoading = true);
 
     final task = Task(
-      uid: widget.taskId is String ? widget.taskId : null,
-      id: widget.taskId is int ? widget.taskId : null,
+      id: _loadedTaskId,
+      uid: _loadedTaskUid,
       name: _nameController.text.trim(),
       note: _noteController.text.trim().isEmpty ? null : _noteController.text.trim(),
       priority: _priority,

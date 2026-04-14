@@ -101,10 +101,11 @@ class TaskNotifier extends StateNotifier<TaskListState> {
   Future<bool> createTask(Task task) async {
     try {
       final response = await ApiService.instance.createTask(task.toJson());
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 302) {
         await loadTasks();
         return true;
       }
+      debugPrint('Create task failed: status=${response.statusCode}, body=${response.data}');
       return false;
     } catch (e) {
       debugPrint('Create task error: $e');
@@ -114,12 +115,21 @@ class TaskNotifier extends StateNotifier<TaskListState> {
 
   Future<bool> updateTask(Task task) async {
     try {
-      if (task.id == null) return false;
-      final response = await ApiService.instance.updateTask(task.id!, task.toJson());
-      if (response.statusCode == 200) {
+      // Server PATCH route uses uid
+      final taskId = task.uid ?? task.id?.toString();
+      if (taskId == null) {
+        debugPrint('Update task error: no id or uid available');
+        return false;
+      }
+      final data = task.toJson();
+      debugPrint('Updating task $taskId with data: $data');
+      final response = await ApiService.instance.updateTask(taskId, data);
+      debugPrint('Update task response: status=${response.statusCode}');
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 302) {
         await loadTasks();
         return true;
       }
+      debugPrint('Update task failed: status=${response.statusCode}, body=${response.data}');
       return false;
     } catch (e) {
       debugPrint('Update task error: $e');
@@ -129,13 +139,14 @@ class TaskNotifier extends StateNotifier<TaskListState> {
 
   Future<bool> toggleTaskComplete(Task task) async {
     try {
-      if (task.id == null) return false;
+      final taskId = task.id?.toString() ?? task.uid;
+      if (taskId == null) return false;
       final newStatus = task.isCompleted ? 0 : 2;
       final response = await ApiService.instance.updateTask(
-        task.id!,
+        taskId,
         {'status': newStatus},
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 302) {
         await loadTasks();
         return true;
       }

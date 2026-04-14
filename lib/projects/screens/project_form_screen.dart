@@ -27,6 +27,10 @@ class _ProjectFormScreenState extends ConsumerState<ProjectFormScreen> {
   bool _isLoading = false;
   bool _isEdit = false;
 
+  // Store the actual numeric id and uid from the loaded project
+  int? _loadedProjectId;
+  String? _loadedProjectUid;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +48,8 @@ class _ProjectFormScreenState extends ConsumerState<ProjectFormScreen> {
       _nameController.text = project.name;
       _descController.text = project.description ?? '';
       setState(() {
+        _loadedProjectId = project.id;
+        _loadedProjectUid = project.uid;
         _status = project.status;
         _priority = project.priority;
         _areaId = project.areaId;
@@ -60,8 +66,8 @@ class _ProjectFormScreenState extends ConsumerState<ProjectFormScreen> {
     setState(() => _isLoading = true);
 
     final project = Project(
-      uid: widget.projectId is String ? widget.projectId : null,
-      id: widget.projectId is int ? widget.projectId : null,
+      id: _loadedProjectId,
+      uid: _loadedProjectUid,
       name: _nameController.text.trim(),
       description: _descController.text.trim().isEmpty ? null : _descController.text.trim(),
       status: _status,

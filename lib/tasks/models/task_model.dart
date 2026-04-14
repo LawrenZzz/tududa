@@ -149,30 +149,31 @@ class Task extends Equatable {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      if (id != null) 'id': id,
+    final map = <String, dynamic>{
       'name': name,
-      'note': note,
       'status': status,
       'priority': priority,
-      'due_date': dueDate?.toIso8601String(),
-      'defer_until': deferUntil?.toIso8601String(),
-      'project_id': projectId,
-      'parent_task_id': parentTaskId,
       'recurrence_type': recurrenceType,
-      'recurrence_interval': recurrenceInterval,
-      'recurrence_end_date': recurrenceEndDate?.toIso8601String(),
-      'recurrence_weekday': recurrenceWeekday,
-      'recurrence_weekdays': recurrenceWeekdays,
-      'recurrence_month_day': recurrenceMonthDay,
-      'recurrence_week_of_month': recurrenceWeekOfMonth,
       'completion_based': completionBased,
       'habit_mode': habitMode,
-      'habit_target_count': habitTargetCount,
-      'habit_frequency_period': habitFrequencyPeriod,
       'habit_streak_mode': habitStreakMode,
       'habit_flexibility_mode': habitFlexibilityMode,
     };
+    if (id != null) map['id'] = id;
+    if (note != null && note!.isNotEmpty) map['note'] = note;
+    if (dueDate != null) map['due_date'] = dueDate!.toIso8601String();
+    if (deferUntil != null) map['defer_until'] = deferUntil!.toIso8601String();
+    if (projectId != null) map['project_id'] = projectId;
+    if (parentTaskId != null) map['parent_task_id'] = parentTaskId;
+    if (recurrenceInterval != null) map['recurrence_interval'] = recurrenceInterval;
+    if (recurrenceEndDate != null) map['recurrence_end_date'] = recurrenceEndDate!.toIso8601String();
+    if (recurrenceWeekday != null) map['recurrence_weekday'] = recurrenceWeekday;
+    if (recurrenceWeekdays != null) map['recurrence_weekdays'] = recurrenceWeekdays;
+    if (recurrenceMonthDay != null) map['recurrence_month_day'] = recurrenceMonthDay;
+    if (recurrenceWeekOfMonth != null) map['recurrence_week_of_month'] = recurrenceWeekOfMonth;
+    if (habitTargetCount != null) map['habit_target_count'] = habitTargetCount;
+    if (habitFrequencyPeriod != null) map['habit_frequency_period'] = habitFrequencyPeriod;
+    return map;
   }
 
   Task copyWith({

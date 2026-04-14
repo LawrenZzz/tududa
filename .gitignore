@@ -48,5 +48,6 @@ app.*.map.json
 android/key.properties
 *.jks
 *.keystore
+*keystore_base64*
 .env
 .env.*

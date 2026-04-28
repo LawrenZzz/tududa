@@ -4,7 +4,7 @@ class AppConstants {
 
   // App
   static const String appName = 'Tududi';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '1.0.1';
 
   // API
   static const String apiVersion = 'v1';

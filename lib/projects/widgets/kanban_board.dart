@@ -22,15 +22,18 @@ class KanbanBoard extends StatefulWidget {
 }
 
 class _KanbanBoardState extends State<KanbanBoard> {
-  // We'll define standard status columns (0: Not Started, 1: In Progress, 4: Waiting, 2: Done)
-  final List<int> _columns = [0, 1, 4, 2];
+  // Mirror Tududi's task lifecycle so tasks do not disappear by status.
+  final List<int> _columns = [0, 6, 1, 4, 5, 2, 3];
   
   String _getStatusName(int status, AppStrings strings) {
     switch (status) {
       case 0: return strings.toDo;
+      case 3: return strings.archived;
+      case 6: return strings.planned;
       case 1: return strings.inProgress;
       case 2: return strings.done;
       case 4: return strings.waiting;
+      case 5: return strings.cancelled;
       default: return strings.other;
     }
   }

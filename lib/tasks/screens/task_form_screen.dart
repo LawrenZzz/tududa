@@ -108,6 +108,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     if (mounted) {
       setState(() => _isLoading = false);
       if (success) {
+        if (_isEdit && widget.taskId != null) {
+          ref.invalidate(taskDetailProvider(widget.taskId!));
+        }
         context.pop();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -195,6 +198,31 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
                     ],
                     selected: {_priority},
                     onSelectionChanged: (v) => setState(() => _priority = v.first),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Status
+                  Text(strings.status, style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<int>(
+                    key: ValueKey(_status),
+                    initialValue: _status,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.radio_button_checked_outlined),
+                    ),
+                    items: _statusOptions(strings)
+                        .map(
+                          (option) => DropdownMenuItem<int>(
+                            value: option.value,
+                            child: Text(option.label),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() => _status = value);
+                      }
+                    },
                   ),
                   const SizedBox(height: 20),
 
@@ -339,6 +367,17 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       default:
         return strings.isZh ? '月' : (_recurrenceInterval == 1 ? 'month' : 'months');
     }
+  }
+
+  List<({int value, String label})> _statusOptions(AppStrings strings) {
+    return [
+      (value: 0, label: strings.notStarted),
+      (value: 6, label: strings.planned),
+      (value: 1, label: strings.inProgress),
+      (value: 4, label: strings.waiting),
+      (value: 5, label: strings.cancelled),
+      (value: 2, label: strings.done),
+    ];
   }
 
   void _showProjectPicker(AppStrings strings) {

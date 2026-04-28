@@ -60,18 +60,20 @@ class TaskNotifier extends StateNotifier<TaskListState> {
 
       switch (state.filter) {
         case TaskFilter.today:
-          queryParams['filter'] = 'today';
+          queryParams['type'] = 'today';
           break;
         case TaskFilter.upcoming:
-          queryParams['filter'] = 'upcoming';
+          queryParams['type'] = 'upcoming';
           break;
         case TaskFilter.someday:
-          queryParams['filter'] = 'someday';
+          queryParams['type'] = 'someday';
           break;
         case TaskFilter.completed:
-          queryParams['filter'] = 'completed';
+          queryParams['type'] = 'all';
+          queryParams['status'] = 'completed';
           break;
         case TaskFilter.all:
+          queryParams['type'] = 'all';
           break;
       }
 
@@ -139,9 +141,9 @@ class TaskNotifier extends StateNotifier<TaskListState> {
 
   Future<bool> toggleTaskComplete(Task task) async {
     try {
-      final taskId = task.id?.toString() ?? task.uid;
+      final taskId = task.uid ?? task.id?.toString();
       if (taskId == null) return false;
-      final newStatus = task.isCompleted ? 0 : 2;
+      final newStatus = task.isDone ? (task.note?.isNotEmpty == true ? 1 : 0) : 2;
       final response = await ApiService.instance.updateTask(
         taskId,
         {'status': newStatus},

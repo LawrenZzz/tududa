@@ -71,6 +71,7 @@ class AppStrings {
   String get desc => isZh ? '描述' : 'Description';
   String get status => isZh ? '状态' : 'Status';
   String get notStarted => isZh ? '未开始' : 'Not Started';
+  String get archived => isZh ? '已归档' : 'Archived';
   String get planned => isZh ? '已计划' : 'Planned';
   String get cancelled => isZh ? '已取消' : 'Cancelled';
   String get area => isZh ? '区域' : 'Area';

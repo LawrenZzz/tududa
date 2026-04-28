@@ -83,7 +83,8 @@ class Task extends Equatable {
     this.updatedAt,
   });
 
-  bool get isCompleted => status == 2;
+  bool get isDone => status == 2;
+  bool get isCompleted => status == 2 || status == 3;
   bool get isRecurring => recurrenceType != 'none';
   bool get hasSubtasks => subtasks != null && subtasks!.isNotEmpty;
 

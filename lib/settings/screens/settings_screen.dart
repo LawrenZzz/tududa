@@ -147,12 +147,12 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: Text(strings.about),
-            subtitle: const Text('v1.0.0 • Open Source'),
+            subtitle: const Text('v1.0.1 • Open Source'),
             onTap: () {
               showAboutDialog(
                 context: context,
                 applicationName: 'Tududa',
-                applicationVersion: '1.0.0',
+                applicationVersion: '1.0.1',
                 applicationLegalese: '© 2024 Chris Veleris. MIT License.',
               );
             },
